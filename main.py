@@ -9,6 +9,10 @@ from pydantic import BaseModel
 class TaskCreate(BaseModel):
     title: str
 
+class TaskUpdate(BaseModel):
+    title: str
+    done: bool
+
 app = FastAPI()
 
 
@@ -47,6 +51,10 @@ async def get_task(id: int):
     raise HTTPException(status_code=404, detail=f"Task {id} not found")
 
 # Stage 3 endpoint for the assignment
+# Example of a POST request using curl:
+"""curl -i -X POST http://localhost:8000/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Buy milk","done":false}'"""
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(request: TaskCreate):
     global next_id
@@ -56,3 +64,30 @@ async def create_task(request: TaskCreate):
     next_id += 1
     in_memory.append(task)
     return task
+
+# Stage 4 endpoint for the assignment
+# Example of a PUT request using curl:
+"""curl -i -X PUT http://localhost:8000/tasks/3 \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Buy food","done":true}'
+"""
+@app.put("/tasks/{id}")
+async def update_task(id: int, request: TaskUpdate):
+    if not request.title:
+        raise HTTPException(status_code=400, detail="Title is required")
+    for task in in_memory:
+        if task["id"] == id:
+            task["title"] = request.title
+            task["done"] = request.done
+            return task
+    raise HTTPException(status_code=404, detail=f"Task {id} not found")
+
+# Example of a DELETE request using curl:
+"""curl -i -X DELETE http://localhost:8000/tasks/3"""
+@app.delete("/tasks/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_task(id: int):
+    for task in in_memory:
+        if task["id"] == id:
+            in_memory.remove(task)
+            return
+    raise HTTPException(status_code=404, detail=f"Task {id} not found")
