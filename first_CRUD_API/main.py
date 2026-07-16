@@ -31,20 +31,24 @@ async def root():
 # First real endpoint for stage 1 of the assignment
 @app.get("/")
 async def get_message():
+    """Get a message from the API."""
     return {"name": "Task API", "version": "1.0", "endpoints": ["/tasks"]}
 
 @app.get("/health")
 async def get_health():
+    """Get the health of the API."""
     return {"status": "ok"}
 
 
 # Stage 2 endpoint for the assignment
 @app.get("/tasks")
 async def get_tasks():
+    """Get all tasks."""
     return in_memory
 
 @app.get("/tasks/{id}")
 async def get_task(id: int):
+    """Get a task by ID."""
     for task in in_memory:
         if task["id"] == id:
             return task
@@ -57,6 +61,7 @@ async def get_task(id: int):
   -d '{"title":"Buy milk","done":false}'"""
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(request: TaskCreate):
+    """Create a new task."""
     global next_id
     if not request.title:
         raise HTTPException(status_code=400, detail="Title is required")
@@ -73,6 +78,7 @@ async def create_task(request: TaskCreate):
 """
 @app.put("/tasks/{id}")
 async def update_task(id: int, request: TaskUpdate):
+    """Update a task by ID."""
     if not request.title:
         raise HTTPException(status_code=400, detail="Title is required")
     for task in in_memory:
@@ -86,6 +92,7 @@ async def update_task(id: int, request: TaskUpdate):
 """curl -i -X DELETE http://localhost:8000/tasks/3"""
 @app.delete("/tasks/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(id: int):
+    """Delete a task by ID."""
     for task in in_memory:
         if task["id"] == id:
             in_memory.remove(task)
