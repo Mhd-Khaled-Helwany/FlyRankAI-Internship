@@ -57,5 +57,4 @@ http://localhost:8000/docs
 
 This page lists all endpoints, their expected request bodies, and their possible responses, and lets you send test requests directly from the browser. Each endpoint's one-line docstring (e.g. `"Get all tasks."`) appears here as its description, making the page self-explanatory without needing to read the source code.
 
-![Swagger UI screenshot](<img width="959" height="460" alt="Server" src="https://github.com/user-attachments/assets/bed5f893-5071-46c0-bb6d-11c9380faf76" />
-)
+![Swagger UI screenshot](Server.png)
