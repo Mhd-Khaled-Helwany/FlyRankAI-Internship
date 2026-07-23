@@ -89,13 +89,15 @@ async def get_task(id: int):
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(request: TaskCreate):
     """Create a new task."""
-    global next_id
     if not request.title:
         raise HTTPException(status_code=400, detail="Title is required")
-    task = {"id": next_id, "title": request.title, "done": False}
-    next_id += 1
-    in_memory.append(task)
-    return task
+    conn = sqlite3.connect("tasks.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO tasks (title, done) VALUES (?, ?)", (request.title, False))
+    conn.commit()
+    task_id = cursor.lastrowid
+    conn.close()
+    return {"id": task_id, "title": request.title, "done": False}
 
 @app.put("/tasks/{id}")
 async def update_task(id: int, request: TaskUpdate):
