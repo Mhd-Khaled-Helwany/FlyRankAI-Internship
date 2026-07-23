@@ -86,6 +86,7 @@ async def get_task(id: int):
         return {"id": row[0], "title": row[1], "done": bool(row[2])}
     raise HTTPException(status_code=404, detail=f"Task {id} not found")
 
+# Stage 2: make the server create data in the database
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(request: TaskCreate):
     """Create a new task."""
@@ -99,23 +100,30 @@ async def create_task(request: TaskCreate):
     conn.close()
     return {"id": task_id, "title": request.title, "done": False}
 
+# Stage 3: make the server update and delete data in the database
 @app.put("/tasks/{id}")
 async def update_task(id: int, request: TaskUpdate):
     """Update a task by ID."""
     if not request.title:
         raise HTTPException(status_code=400, detail="Title is required")
-    for task in in_memory:
-        if task["id"] == id:
-            task["title"] = request.title
-            task["done"] = request.done
-            return task
-    raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    conn = sqlite3.connect("tasks.db")
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tasks SET title = ?, done = ? WHERE id = ?", (request.title, request.done, id))
+    conn.commit()
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    conn.close()
+    return {"id": id, "title": request.title, "done": request.done}
 
 @app.delete("/tasks/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(id: int):
     """Delete a task by ID."""
-    for task in in_memory:
-        if task["id"] == id:
-            in_memory.remove(task)
-            return
-    raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    conn = sqlite3.connect("tasks.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    conn.commit()
+    if cursor.rowcount == 0:
+        conn.close()
+        raise HTTPException(status_code=404, detail=f"Task {id} not found")
+    conn.close()
