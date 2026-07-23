@@ -16,6 +16,7 @@ class TaskUpdate(BaseModel):
 
 app = FastAPI()
 
+# Stage 0: No dupelication of data and table is created once
 conn = sqlite3.connect("tasks.db")
 cursor = conn.cursor()
 cursor.execute("""
@@ -61,7 +62,7 @@ async def get_health():
     """Get the health of the API."""
     return {"status": "ok"}
 
-# Stage 0: make the server fetch data from the database
+# Stage 1: make the server fetch data from the database
 @app.get("/tasks")
 async def get_tasks():
     """Get all tasks."""
@@ -76,7 +77,14 @@ async def get_tasks():
 @app.get("/tasks/{id}")
 async def get_task(id: int):
     """Get a task by ID."""
-    
+    conn = sqlite3.connect("tasks.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    row = cursor.fetchone()
+    conn.close()
+    if row:
+        return {"id": row[0], "title": row[1], "done": bool(row[2])}
+    raise HTTPException(status_code=404, detail=f"Task {id} not found")
 
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(request: TaskCreate):
