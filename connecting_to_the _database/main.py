@@ -41,11 +41,6 @@ if count == 0:
 conn.commit()
 conn.close()
 
-in_memory = [{"id": 1, "title": "clean the house", "done": False},
-             {"id": 2, "title": "cook dinner", "done": True},
-             {"id": 3, "title": "do the laundry", "done": True}]
-next_id = 4
-
 # Hello world endpoint from FastAPI documentation
 """@app.get("/")
 async def root():
