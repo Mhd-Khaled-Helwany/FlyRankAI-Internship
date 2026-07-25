@@ -95,11 +95,11 @@ async def create_task(request: TaskCreate):
         raise HTTPException(status_code=400, detail="Title is required")
     conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tasks (title, done) VALUES (%s, %s)", (request.title, False))
+    cursor.execute("INSERT INTO tasks (title, done) VALUES (%s, %s) RETURNING *", (request.title, False))
+    row = cursor.fetchone()
     conn.commit()
-    task_id = cursor.lastrowid
     conn.close()
-    return {"id": task_id, "title": request.title, "done": False}
+    return {"id": row[0], "title": row[1], "done": bool(row[2])}
 
 # Stage 3: make the server update and delete data in the database
 @app.put("/tasks/{id}")
