@@ -5,7 +5,13 @@
 
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
-import sqlite3
+import psycopg
+import os
+from dotenv import load_dotenv
+
+# Stage 1: connect via .env
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 class TaskCreate(BaseModel):
     title: str
@@ -16,12 +22,12 @@ class TaskUpdate(BaseModel):
 
 app = FastAPI()
 
-# Stage 0: No dupelication of data and table is created once
-conn = sqlite3.connect("tasks.db")
+# Create table once
+conn = psycopg.connect(DATABASE_URL)
 cursor = conn.cursor()
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS tasks (
-        id INTEGER PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
         done BOOLEAN NOT NULL
     )
@@ -31,7 +37,7 @@ cursor.execute("SELECT COUNT(*) FROM tasks")
 count = cursor.fetchone()[0]
 if count == 0:
     cursor.executemany(
-        "INSERT INTO tasks (title, done) VALUES (?, ?)",
+        "INSERT INTO tasks (title, done) VALUES (%s, %s)",
         [
             ("clean the house", False),
             ("cook dinner", True),
@@ -57,7 +63,7 @@ async def get_health():
     """Get the health of the API."""
     return {"status": "ok"}
 
-# Stage 1: make the server fetch data from the database
+
 @app.get("/tasks")
 async def get_tasks():
     """Get all tasks."""
@@ -81,7 +87,7 @@ async def get_task(id: int):
         return {"id": row[0], "title": row[1], "done": bool(row[2])}
     raise HTTPException(status_code=404, detail=f"Task {id} not found")
 
-# Stage 2: make the server create data in the database
+ 
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 async def create_task(request: TaskCreate):
     """Create a new task."""
