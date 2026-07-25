@@ -67,7 +67,7 @@ async def get_health():
 @app.get("/tasks")
 async def get_tasks():
     """Get all tasks."""
-    conn = sqlite3.connect("tasks.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM tasks")
     rows = cursor.fetchall()
@@ -78,9 +78,9 @@ async def get_tasks():
 @app.get("/tasks/{id}")
 async def get_task(id: int):
     """Get a task by ID."""
-    conn = sqlite3.connect("tasks.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    cursor.execute("SELECT * FROM tasks WHERE id = %s", (id,))
     row = cursor.fetchone()
     conn.close()
     if row:
@@ -93,9 +93,9 @@ async def create_task(request: TaskCreate):
     """Create a new task."""
     if not request.title:
         raise HTTPException(status_code=400, detail="Title is required")
-    conn = sqlite3.connect("tasks.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tasks (title, done) VALUES (?, ?)", (request.title, False))
+    cursor.execute("INSERT INTO tasks (title, done) VALUES (%s, %s)", (request.title, False))
     conn.commit()
     task_id = cursor.lastrowid
     conn.close()
@@ -107,9 +107,9 @@ async def update_task(id: int, request: TaskUpdate):
     """Update a task by ID."""
     if not request.title:
         raise HTTPException(status_code=400, detail="Title is required")
-    conn = sqlite3.connect("tasks.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
-    cursor.execute("UPDATE tasks SET title = ?, done = ? WHERE id = ?", (request.title, request.done, id))
+    cursor.execute("UPDATE tasks SET title = %s, done = %s WHERE id = %s", (request.title, request.done, id))
     conn.commit()
     if cursor.rowcount == 0:
         conn.close()
@@ -120,9 +120,9 @@ async def update_task(id: int, request: TaskUpdate):
 @app.delete("/tasks/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(id: int):
     """Delete a task by ID."""
-    conn = sqlite3.connect("tasks.db")
+    conn = psycopg.connect(DATABASE_URL)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM tasks WHERE id = %s", (id,))
     conn.commit()
     if cursor.rowcount == 0:
         conn.close()
