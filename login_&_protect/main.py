@@ -84,4 +84,10 @@ async def protected(authorization: str | None = Header(default=None)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": "Malformed Authorization header"}
         )
-    return {"message": "Placeholder"}
+    try:
+        response = supabase.auth.get_user(token)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": "Invalid or expired token"})
+
+    
+    return {"message": "Access granted", "id": response.user.id, "email": response.user.email, "account creation date": response.user.created_at}
