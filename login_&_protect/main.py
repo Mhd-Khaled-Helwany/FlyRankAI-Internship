@@ -9,6 +9,7 @@ from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -18,11 +19,42 @@ if not SUPABASE_URL or not SUPABASE_KEY:
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-class TaskCreate(BaseModel):
-    title: str
-
-class TaskUpdate(BaseModel):
-    title: str
-    done: bool
+class UserInfo(BaseModel):
+    email: str
+    password: str
 
 app = FastAPI()
+
+# Stage 1: signup endpoint
+@app.post("/auth/signup", status_code=status.HTTP_201_CREATED)
+async def signup(signup_data: UserInfo):
+    """Sign up a new user."""
+    if not signup_data.email or not signup_data.password:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email and password are required")
+    try:
+        response = supabase.auth.sign_up({
+            "email": signup_data.email,
+            "password": signup_data.password
+        })
+        return {"message": "User signed up successfully", "user": response.user}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+# Log in endpoint
+@app.post("/auth/login")
+async def login(signin_data: UserInfo):
+    """Log in an existing user."""
+    if not signin_data.email or not signin_data.password:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email and password are required")
+    try:
+        response = supabase.auth.sign_in_with_password({
+            "email": signin_data.email,
+            "password": signin_data.password
+        })
+    except Exception as e:
+        auth_status = getattr(e, "status", None)
+        if auth_status is not None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": "Invalid login credentials"})
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
+    return {"message": "User Logged in successfully", "access_token": response.session.access_token, "refresh_token": response.session.refresh_token}
