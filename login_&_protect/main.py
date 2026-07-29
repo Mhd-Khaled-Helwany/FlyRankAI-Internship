@@ -4,6 +4,7 @@
 # To access a specific endpoint, add the endpoint to the end of the URL, e.g. http://localhost:8000/tasks
 
 from fastapi import FastAPI, HTTPException, status
+from fastapi import Header
 from supabase import create_client, Client
 from pydantic import BaseModel
 import os
@@ -58,3 +59,29 @@ async def login(signin_data: UserInfo):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     
     return {"message": "User Logged in successfully", "access_token": response.session.access_token, "refresh_token": response.session.refresh_token}
+
+# Stage 2: Public endpoint
+@app.get("/public/info")
+async def public():
+    return {"message": "Welcome stranger! This info is public."}
+
+# Protected endpoint
+@app.get("/protected/profile")
+async def protected(authorization: str | None = Header(default=None)):
+    if not authorization:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={ "error": "Access token required" })
+    
+    parts = authorization.split(" ")
+    if len(parts) != 2 or parts[0] != "Bearer":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"error": "Malformed Authorization header"}
+        )
+
+    token = parts[1]
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={"error": "Malformed Authorization header"}
+        )
+    return {"message": "Placeholder"}
