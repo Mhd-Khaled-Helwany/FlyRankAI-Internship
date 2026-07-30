@@ -5,6 +5,7 @@
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi import Depends, Header
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from supabase import create_client, Client
 from pydantic import BaseModel
 import os
@@ -19,6 +20,8 @@ if not SUPABASE_URL or not SUPABASE_KEY:
     raise RuntimeError("Missing SUPABASE_URL or SUPABASE_KEY environment variables")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+bearer_scheme = HTTPBearer(auto_error=False)
 
 class UserInfo(BaseModel):
     email: str
@@ -67,29 +70,24 @@ async def public():
     return {"message": "Welcome stranger! This info is public."}
 
 # Stage 3: Dependency for token validation
-def check_token(authorization: str | None = Header(default=None)):
-    if not authorization:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={ "error": "Access token required" })
-    
-    parts = authorization.split(" ")
-    if len(parts) != 2 or parts[0] != "Bearer":
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": "Malformed Authorization header"}
-        )
+def check_token(authorization: HTTPAuthorizationCredentials | None = Depends(bearer_scheme)):
+    """Dependency: extracts and verifies the bearer token, returns the user."""
+    if authorization is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                             detail={"error": "Access token required"})
 
-    token = parts[1]
+    token = authorization.credentials
     if not token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": "Malformed Authorization header"}
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                             detail={"error": "Malformed Authorization header"})
+
     try:
-        response = supabase.auth.get_user(token)
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": "Invalid or expired token"})
-    
-    return response.user
+        user_response = supabase.auth.get_user(token)
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                             detail={"error": "Invalid or expired token"})
+
+    return user_response.user
 
 
 # Protected endpoint
