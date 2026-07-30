@@ -4,7 +4,7 @@
 # To access a specific endpoint, add the endpoint to the end of the URL, e.g. http://localhost:8000/tasks
 
 from fastapi import FastAPI, HTTPException, status
-from fastapi import Header
+from fastapi import Depends, Header
 from supabase import create_client, Client
 from pydantic import BaseModel
 import os
@@ -63,11 +63,11 @@ async def login(signin_data: UserInfo):
 # Stage 2: Public endpoint
 @app.get("/public/info")
 async def public():
+    """Public endpoint that does not require authentication."""
     return {"message": "Welcome stranger! This info is public."}
 
-# Protected endpoint
-@app.get("/protected/profile")
-async def protected(authorization: str | None = Header(default=None)):
+# Stage 3: Dependency for token validation
+def check_token(authorization: str | None = Header(default=None)):
     if not authorization:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={ "error": "Access token required" })
     
@@ -88,6 +88,23 @@ async def protected(authorization: str | None = Header(default=None)):
         response = supabase.auth.get_user(token)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": "Invalid or expired token"})
-
     
-    return {"message": "Access granted", "id": response.user.id, "email": response.user.email, "account creation date": response.user.created_at}
+    return response.user
+
+
+# Protected endpoint
+@app.get("/protected/profile")
+async def protected(response = Depends(check_token)):
+    """Protected endpoint that requires a valid access token."""
+    
+    return {"message": "Access granted", "id": response.id, "email": response.email, "account creation date": response.created_at}
+
+# Stage 4: Logout endpoint
+@app.post("/auth/logout", status_code=status.HTTP_204_NO_CONTENT)
+async def logout(response = Depends(check_token)):
+    """Log out the user by revoking the access token."""
+    try:
+        supabase.auth.sign_out()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    return
