@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Projects page featuring systems work, reports, and a portfolio overview for a low-latency engineering profile."
+    />
+    <title>Projects</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <nav class="navbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html">Mhd Khaled Helwany / Portfolio</a>
+          <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="index.html#contact">Contact</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="page-intro" aria-labelledby="projects-title">
+          <div class="eyebrow">Case studies</div>
+          <h1 id="projects-title">Projects that reflect careful systems thinking.</h1>
+          <p>
+            This page highlights the work that best represents the mix of performance focus, design discipline, and technical depth I bring to software projects.
+          </p>
+        </section>
+
+        <section class="section" aria-label="Highlighted work">
+          <div class="highlight-grid">
+            <article class="project-card project-card-featured">
+              <img src="images/SPSC.png" alt="Illustration of a single-producer, single-consumer ring buffer" />
+              <div class="project-card-body">
+                <p class="project-tag">Low latency programming</p>
+                <h2>SPSC Ring</h2>
+                <p>
+                  A low-overhead message-passing structure designed for predictable throughput and minimal contention under demanding conditions.
+                </p>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <img src="images/SPSC_report.png" alt="Development report covering strategy engine IPC design" />
+              <div class="project-card-body">
+                <p class="project-tag">Development report</p>
+                <h2>Strategy Engine IPC Thesis</h2>
+                <p>
+                  A deeper report exploring design choices, tradeoffs, and implementation decisions behind inter-process communication work.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" aria-label="Project categories">
+          <div class="section-card">
+            <div class="eyebrow">Project catalog</div>
+            <h2>Projects by category</h2>
+            <div class="category-grid">
+              <div class="category-block">
+                <h3>Games</h3>
+                <p class="category-placeholder">Coming soon.</p>
+              </div>
+              <div class="category-block">
+                <h3>Hardware focused</h3>
+                <p class="category-placeholder">Coming soon.</p>
+              </div>
+              <div class="category-block">
+                <h3>Low latency programming</h3>
+                <p class="category-placeholder">Coming soon.</p>
+              </div>
+              <div class="category-block">
+                <h3>Miscellaneous applications</h3>
+                <p class="category-placeholder">Coming soon.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="contact">
+          <div class="cta-band">
+            <div>
+              <div class="eyebrow" style="color: #f4c899; margin-bottom: 0.4rem;">Discuss the work</div>
+              <strong>Want to discuss any of the presented projects? Message me on LinkedIn.</strong>
+            </div>
+            <a class="btn btn-secondary" href="https://www.linkedin.com/in/mhd-khaled-helwany-129b9b315" target="_blank" rel="noreferrer">Message me on LinkedIn</a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
