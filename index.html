@@ -1,33 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlyRankAI</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            text-align: center;
-        }
-        img {
-            max-width: 90vw;
-            max-height: 90vh;
-            object-fit: contain;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <img src="placeholder.png" alt="Placeholder">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A portfolio home page for a systems-focused software engineer building dependable, low-latency software."
+    />
+    <title>Portfolio Home</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <nav class="navbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html">Engineer / Portfolio</a>
+          <div class="nav-links">
+            <a href="#featured">Featured work</a>
+            <a href="#depth">Development report</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="home-title">
+          <div class="hero-copy">
+            <div class="eyebrow">Systems-minded engineer</div>
+            <h1 id="home-title">I build software that moves quickly without losing control.</h1>
+            <p>
+              I focus on low-latency systems, thoughtful architecture, and the kind of execution that makes complex work feel calm, reliable, and ready for production.
+            </p>
+            <div class="button-row">
+              <a class="btn btn-primary" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">Message me on LinkedIn</a>
+              <a class="btn btn-secondary" href="#featured">Continue through my work</a>
+            </div>
+          </div>
+
+          <div class="hero-card">
+            <img class="gallery-trigger" src="images/featured-case.svg" alt="Illustrated low-latency ring buffer concept" />
+          </div>
+        </section>
+
+        <section class="section" id="featured">
+          <div class="section-card">
+            <div class="eyebrow">Featured case</div>
+            <h2>Low-latency SPSC ring buffer</h2>
+            <div class="case-grid">
+              <div class="case-copy">
+                <p>
+                  This is the clearest example of how I approach performance work: keep the design simple, make the tradeoffs explicit, and prove the result under pressure.
+                </p>
+                <ul>
+                  <li>Designed for single-producer, single-consumer messaging with minimal overhead.</li>
+                  <li>Focused on predictable memory access, bounded latency, and understandable invariants.</li>
+                  <li>Built to be inspectable rather than clever for the sake of cleverness.</li>
+                </ul>
+                <a class="case-link" href="#depth">See the depth behind the ring buffer</a>
+              </div>
+              <div class="proof-grid">
+                <div class="metric">
+                  <strong>Low overhead</strong>
+                  <span>Fast-path logic stays compact and easy to reason about.</span>
+                </div>
+                <div class="metric">
+                  <strong>Clear structure</strong>
+                  <span>State transitions are explicit, which makes debugging easier.</span>
+                </div>
+                <div class="metric">
+                  <strong>Practical focus</strong>
+                  <span>The work is aimed at real-world throughput and reliability needs.</span>
+                </div>
+                <div class="metric">
+                  <strong>Measured care</strong>
+                  <span>Each decision is guided by the constraints of the system, not ego.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="depth">
+          <div class="section-card">
+            <div class="eyebrow">Development report teaser</div>
+            <h2>The depth behind the ring buffer</h2>
+            <p>
+              This report walks through the design choices, the edge cases, and the reasoning behind the implementation. It is the kind of material I enjoy because it turns performance work into a coherent story about tradeoffs and discipline.
+            </p>
+            <p class="bio">
+              Across my projects, I keep coming back to the same theme: build systems that are useful under stress, maintainable under change, and honest about what they can do.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="contact">
+          <div class="cta-band">
+            <div>
+              <div class="eyebrow" style="color: #f4c899; margin-bottom: 0.4rem;">Ready to talk</div>
+              <strong>Message me on LinkedIn or reach me by email if you want to discuss a project.</strong>
+            </div>
+            <div class="button-row">
+              <a class="btn btn-secondary" href="https://www.linkedin.com/" target="_blank" rel="noreferrer">Message me on LinkedIn</a>
+              <a class="btn btn-secondary" href="mailto:hello@yourportfolio.dev">Email me</a>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
-</body>
+
+    <div class="lightbox" aria-hidden="true">
+      <button type="button" aria-label="Close image preview">×</button>
+      <img src="" alt="" />
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
