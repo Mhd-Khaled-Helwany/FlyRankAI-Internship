@@ -209,6 +209,13 @@ h2,
   color: rgba(22, 22, 22, 0.8);
 }
 
+.project-intro-text {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: rgba(22, 22, 22, 0.8);
+  max-width: 760px;
+}
+
 .page-intro {
   padding: 3rem 0 1rem;
 }
@@ -243,6 +250,7 @@ h2,
   width: 100%;
   height: 220px;
   object-fit: cover;
+  object-position: top center;
 }
 
 .project-card-body {
@@ -253,6 +261,13 @@ h2,
   margin: 0.2rem 0 0.4rem;
   color: var(--navy);
   font-size: 1.5rem;
+}
+
+.page-link-btn {
+  display: inline-flex;
+  margin-top: 0.9rem;
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .project-tag {
@@ -357,6 +372,59 @@ h2,
   border-color: rgba(247, 246, 243, 0.24);
 }
 
+.story-layout,
+.report-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.story-card {
+  border: 1px solid var(--border);
+  border-radius: 1.3rem;
+  padding: 1.2rem 1.25rem;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 18px 40px rgba(22, 22, 22, 0.04);
+}
+
+.story-card-wide,
+.story-card-highlight {
+  grid-column: 1 / -1;
+}
+
+.story-badge {
+  display: inline-flex;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(199, 123, 62, 0.16);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.story-card h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.45rem;
+  color: var(--navy);
+}
+
+.story-card p {
+  margin: 0;
+  color: rgba(22, 22, 22, 0.8);
+}
+
+.story-card-highlight {
+  background: linear-gradient(135deg, rgba(27, 42, 74, 0.06), rgba(199, 123, 62, 0.14));
+}
+
+.download-btn {
+  margin-top: 1rem;
+  width: fit-content;
+}
+
 .lightbox {
   position: fixed;
   inset: 0;
@@ -393,6 +461,85 @@ h2,
   font-size: 1.1rem;
 }
 
+.email-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 22, 22, 0.62);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 12;
+}
+
+.email-modal.open {
+  display: flex;
+}
+
+.email-modal-card {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--warm-white);
+  border-radius: 1.2rem;
+  padding: 1.35rem;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.email-modal-card h3 {
+  margin: 0 0 0.4rem;
+  color: var(--navy);
+}
+
+.email-modal-card p {
+  margin: 0 0 0.8rem;
+  color: rgba(22, 22, 22, 0.8);
+}
+
+.email-modal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: rgba(27, 42, 74, 0.06);
+}
+
+.email-address {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.copy-email-btn,
+.email-modal-close {
+  border: none;
+  cursor: pointer;
+}
+
+.copy-email-btn {
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  background: var(--navy);
+  color: var(--warm-white);
+}
+
+.email-modal-close {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.8rem;
+  background: transparent;
+  font-size: 1.2rem;
+  color: var(--warm-black);
+}
+
+.email-status {
+  min-height: 1.2rem;
+  margin-top: 0.8rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
 @media (max-width: 780px) {
   .hero {
     padding-top: 3rem;
@@ -410,7 +557,9 @@ h2,
   .case-grid,
   .proof-grid,
   .highlight-grid,
-  .category-grid {
+  .category-grid,
+  .story-layout,
+  .report-layout {
     grid-template-columns: 1fr;
   }
 

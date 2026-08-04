@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A case study page for the low-latency SPSC ring buffer project."
+    />
+    <title>SPSC</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <nav class="navbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html">Mhd Khaled Helwany / Portfolio</a>
+          <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="report.html">Development report</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="page-intro" aria-labelledby="case-title">
+          <div class="eyebrow">Low-latency IPC case study</div>
+          <h1 id="case-title">SPSC</h1>
+          <p>
+            A compact, robust message pipeline designed around fairness, isolation, and predictable latency under real system pressure.
+          </p>
+        </section>
+
+        <section class="section story-layout" aria-label="Project narrative">
+          <article class="story-card">
+            <div class="story-badge">Why the design was needed</div>
+            <h2>The problem</h2>
+            <p>
+              The challenge was to support IPC that felt fair between processes without trading away reliability. MPSC queues and sockets were rejected because they introduced more coordination overhead and less predictable behavior for the intended workload.
+            </p>
+          </article>
+
+          <article class="story-card">
+            <div class="story-badge">How the solution was built</div>
+            <h2>What I did</h2>
+            <p>
+              I owned the serialization scope, clarified the full/empty ambiguity, and weighed the sacrificial-slot tradeoff before settling on a 64-slot sizing decision that balanced simplicity and throughput. The result was a path that was explicit rather than clever.
+            </p>
+          </article>
+
+          <article class="story-card story-card-wide">
+            <div class="story-badge">What the result revealed</div>
+            <h2>What came of it</h2>
+            <p>
+              The system remained safe, isolated, and fast while still being understandable. The main remaining open question is whether the sleep-path cost can be reduced further without giving up the calm and predictable behavior that made the design attractive in the first place.
+            </p>
+          </article>
+        </section>
+
+        <section class="section" id="contact">
+          <div class="cta-band">
+            <div>
+              <div class="eyebrow" style="color: #f4c899; margin-bottom: 0.4rem;">Keep exploring</div>
+              <strong>If you're solving similar constraints — message me on LinkedIn.</strong>
+            </div>
+            <div class="button-row">
+              <a class="btn btn-secondary" href="https://www.linkedin.com/in/mhd-khaled-helwany-129b9b315" target="_blank" rel="noreferrer">Message me on LinkedIn</a>
+              <a class="btn btn-secondary" href="report.html">Check out the development report</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
