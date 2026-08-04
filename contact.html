@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contact page for reaching out through LinkedIn or email."
+    />
+    <title>contact</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <nav class="navbar" aria-label="Primary navigation">
+          <a class="brand" href="index.html">Mhd Khaled Helwany / Portfolio</a>
+          <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="contact.html">Contact</a>
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <section class="page-intro contact-intro" aria-labelledby="contact-title">
+          <div class="eyebrow">Get in touch</div>
+          <h1 id="contact-title">Let’s talk about systems, strategy, and thoughtful execution.</h1>
+          <p>
+            If a project, idea, or technical challenge feels worth discussing, the best next step is to reach out directly.
+          </p>
+        </section>
+
+        <section class="section" aria-label="Contact actions">
+          <div class="contact-banner">
+            <img src="images/LinkedIn_banner.png" alt="LinkedIn banner" />
+          </div>
+          <div class="contact-card">
+            <div class="contact-action">
+              <h2>LinkedIn</h2>
+              <p>Best for professional conversations, project discussions, and collaboration ideas.</p>
+              <a class="btn btn-primary" href="https://www.linkedin.com/in/mhd-khaled-helwany-129b9b315" target="_blank" rel="noreferrer">Message me on LinkedIn</a>
+            </div>
+            <div class="contact-action contact-action-secondary">
+              <h2>Email</h2>
+              <p>Use this if you want to keep the conversation direct or follow up later.</p>
+              <button class="btn btn-secondary email-trigger" type="button">Email me</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="email-modal" id="emailModal" aria-hidden="true">
+      <div class="email-modal-card" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
+        <button class="email-modal-close" type="button" aria-label="Close email dialog">×</button>
+        <h3 id="emailModalTitle">My email address</h3>
+        <p>Use the button below to copy my email for later.</p>
+        <div class="email-modal-row">
+          <span class="email-address">MKhelwani@gmail.com</span>
+          <button class="copy-email-btn" type="button">Copy</button>
+        </div>
+        <p class="email-status" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
