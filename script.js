@@ -73,6 +73,26 @@ if (emailTrigger && emailModal && emailModalClose && copyEmailButton) {
   });
 }
 
+document.querySelectorAll('.accordion-toggle').forEach((toggle) => {
+  const content = toggle.nextElementSibling;
+
+  if (!(content instanceof HTMLElement)) {
+    return;
+  }
+
+  toggle.addEventListener('click', () => {
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    content.classList.toggle('open', !expanded);
+
+    if (!expanded) {
+      content.style.maxHeight = content.scrollHeight + 'px';
+    } else {
+      content.style.maxHeight = '0';
+    }
+  });
+});
+
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     closeLightbox();
