@@ -1,7 +1,9 @@
 import os
 import time
 import requests
-from urllib.parse import urljoin
+import json
+from datetime import datetime, timezone
+from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
 
 URL = "https://books.toscrape.com/"
@@ -45,16 +47,13 @@ def get_page_html(url: str, filename: str) -> str | None:
     """
     cached_html = load_from_cache(filename)
     if cached_html is not None:
-        print(f"Cache hit: {os.path.join(CACHE_DIR, filename)}")
         return cached_html, False
     
     resp = fetch_page(url)
     if resp.status_code == 200:
         save_to_cache(resp.text, filename)
-        print(f"Fetched: {os.path.join(CACHE_DIR, filename)}")
         return resp.text, True
     else:
-        print(f"Failed to fetch page. Status code: {resp.status_code}")
         return None, True
 
 def extract_book_urls(html: str, page_url: str) -> list[str]:
@@ -75,37 +74,102 @@ def extract_next_page_url(html: str, page_url: str) -> str | None:
         return None
     return urljoin(page_url, next_link["href"])
 
-def crawl_catalogue(start_url: str, max_pages: int) -> list[str]:
+def crawl_catalogue(start_url: str, max_pages: int) -> list[tuple[str, str]]:
     """
     Crawls the catalogue pages and extracts book URLs.
     """
+    book_entries: list[tuple[str, str]] = []
     current_url = start_url
-    all_book_urls = []
     page_number = 1
-    
+
     while current_url and page_number <= max_pages:
-        filename =f"catalogue-page-{page_number}.html"
+        filename = f"catalogue-page-{page_number}.html"
         html, was_fetched = get_page_html(current_url, filename)
         if html is None:
-            print(f"Failed to retrieve page {page_number}. Stopping crawl.")
             break
 
-        all_book_urls.extend(extract_book_urls(html, current_url))
+        for book_url in extract_book_urls(html, current_url):
+            book_entries.append((book_url, current_url))
         if was_fetched:
             time.sleep(0.5)
-        
+
         current_url = extract_next_page_url(html, current_url)
         page_number += 1
 
-    return all_book_urls
+    return book_entries
 
+def remove_duplicates(entries: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    """
+    Removes duplicate book entries while preserving the order.
+    """
+    seen: dict[str, str] = {}
+    for url, source_page in entries:
+        if url not in seen:
+            seen[url] = source_page
+    return list(seen.items())
+
+def book_filename_from_url(url: str) -> str:
+    """
+    Generates a filename for a book based on its URL.
+    """
+    path_parts = [p for p in urlparse(url).path.split("/") if p]
+    slug = path_parts[-2] if len(path_parts) >= 2 else path_parts[-1]
+    return f"{slug}.html"
+
+def clean_text(text: str) -> str:
+    """
+    Cleans the text by removing extra whitespace and newlines.
+    """
+    return " ".join(text.split())
+
+def extract_book_details(html: str, product_url: str, source_page: str) -> dict:
+    """
+    Extracts book details from the HTML content of a book page.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    product_main = soup.select_one("div.product_main")
+
+    title = clean_text(product_main.select_one("h1").get_text())
+    price_text = clean_text(product_main.select_one("p.price_color").get_text())
+    availability_text = clean_text(product_main.select_one("p.availability").get_text())
+    rating_tag = product_main.select_one("p.star-rating")
+    rating_classes = rating_tag.get("class", [])
+    rating_text = next((c for c in rating_classes if c != "star-rating"), None)
+    description_tag = soup.select_one("#product_description ~ p")
+    description = clean_text(description_tag.get_text()) if description_tag else None
+
+    return {
+        "title": title,
+        "product_url": product_url,
+        "price_text": price_text,
+        "availability_text": availability_text,
+        "rating_text": rating_text,
+        "description": description,
+        "source_page": source_page,
+        "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+
+def fetch_book_details(entries: list[tuple[str, str]]) -> list[dict]:
+    """
+    Fetches book details for each book entry.
+    """
+    records = []
+    for url, source_page in entries:
+        filename = book_filename_from_url(url)
+        html, was_fetched = get_page_html(url, filename)
+        if html is None:
+            continue
+
+        records.append(extract_book_details(html, url, source_page))
+        if was_fetched:
+            time.sleep(0.5)
+
+    return records
 
 if __name__ == "__main__":
-    book_urls = crawl_catalogue(URL, 3)
-    unique_urls = list(dict.fromkeys(book_urls))  # de-dupe, preserve order
-
-    print(
-        f"catalogue_pages={min(3, len(book_urls) and 3)} , "
-        f"discovered={len(book_urls)} , "
-        f"unique_urls={len(unique_urls)}"
-    )
+    book_entries = crawl_catalogue(URL, 3)
+    unique_entries = remove_duplicates(book_entries)
+    records = fetch_book_details(unique_entries)
+    if records:
+        print(json.dumps(records[0], indent=2))
+    print(f"detail_pages={len(records)}")
