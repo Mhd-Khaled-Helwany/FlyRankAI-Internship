@@ -3,6 +3,7 @@ import time
 import requests
 import json
 import re
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
@@ -14,10 +15,18 @@ CACHE_DIR = os.path.join(SCRIPT_DIR, "cache")
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "output")
 BOOKS_OUTPUT_PATH = os.path.join(OUTPUT_DIR, "books.json")
 ERRORS_OUTPUT_PATH = os.path.join(OUTPUT_DIR, "errors.json")
+RUN_REPORT_PATH = os.path.join(OUTPUT_DIR, "run-report.json")
 
 header = {
     "User-Agent": "FlyRankInternshipA9/1.0 https://github.com/Mhd-Khaled-Helwany/FlyRankAI-Internship/tree/main/scraper"   
 }
+
+@dataclass
+class RunStats:
+    pages_fetched: int = 0       
+    cache_hits: int = 0          
+    failed_pages: int = 0        
+    failed_page_details: list = field(default_factory=list)
 
 class BookRecord(BaseModel):
     title: str = Field(..., description="Book title as shown on the page")
@@ -37,13 +46,39 @@ class BookRecord(BaseModel):
             raise ValueError("URL must use https://, not http://")
         return value
 
-def fetch_page(url:str) -> requests.Response:
+def fetch_page(url:str) -> tuple[requests.Response | None, str | None]:
     """
     Fetches the content of a webpage.
     """
-    response = requests.get(url, headers=header, timeout=10)
-    response.raise_for_status()  # Raise an error for bad responses
-    return response
+    last_error = None
+    for attempt in range(1, 3):
+        try:
+            resp = requests.get(url, headers=header, timeout=10)
+        except requests.exceptions.Timeout:
+            last_error = "timeout"
+            if attempt < 2:
+                time.sleep(1)
+                continue
+            return None, last_error
+        except requests.exceptions.RequestException as e:
+            return None, f"request_error: {e}"
+
+        if resp.status_code == 200:
+            return resp, None
+
+        if resp.status_code == 404 or resp.status_code == 403:
+            return None, f"http_{resp.status_code}"
+
+        if 500 <= resp.status_code < 600:
+            last_error = f"http_{resp.status_code}"
+            if attempt < 2:
+                time.sleep(1)
+                continue
+            return None, last_error
+
+        return None, f"http_{resp.status_code}"
+
+    return None, last_error
 
 def save_to_cache(html: str, filename: str) -> str:
     """
@@ -64,20 +99,26 @@ def load_from_cache(filename: str) -> str | None:
             return f.read()
     return None
 
-def get_page_html(url: str, filename: str) -> str | None:
+def get_page_html(url: str, filename: str, stats: RunStats) -> tuple[str | None, bool]:
     """
     Fetches the cached HTML content of a webpage.
     """
     cached_html = load_from_cache(filename)
     if cached_html is not None:
+        stats.cache_hits += 1
         return cached_html, False
     
-    resp = fetch_page(url)
-    if resp.status_code == 200:
+    resp, error = fetch_page(url)
+    if resp is not None:
         save_to_cache(resp.text, filename)
+        print(f"Fetched and cached: {os.path.join(CACHE_DIR, filename)}")
+        stats.pages_fetched += 1
         return resp.text, True
-    else:
-        return None, True
+
+    print(f"Failed to fetch page ({error}): {url}")
+    stats.failed_pages += 1
+    stats.failed_page_details.append({"url": url, "reason": error})
+    return None, True
 
 def extract_book_urls(html: str, page_url: str) -> list[str]:
     """
@@ -97,7 +138,7 @@ def extract_next_page_url(html: str, page_url: str) -> str | None:
         return None
     return urljoin(page_url, next_link["href"])
 
-def crawl_catalogue(start_url: str, max_pages: int) -> list[tuple[str, str]]:
+def crawl_catalogue(start_url: str, max_pages: int, stats: RunStats) -> list[tuple[str, str]]:
     """
     Crawls the catalogue pages and extracts book URLs.
     """
@@ -107,7 +148,14 @@ def crawl_catalogue(start_url: str, max_pages: int) -> list[tuple[str, str]]:
 
     while current_url and page_number <= max_pages:
         filename = f"catalogue-page-{page_number}.html"
-        html, was_fetched = get_page_html(current_url, filename)
+        html, was_fetched = get_page_html(current_url, filename, stats)
+        try:
+            html, was_fetched = get_page_html(current_url, filename, stats)
+        except Exception as e:
+            print(f"Unexpected error on catalogue page {current_url}: {e}")
+            stats.failed_pages += 1
+            stats.failed_page_details.append({"url": current_url, "reason": str(e)})
+            break
         if html is None:
             break
 
@@ -172,18 +220,31 @@ def extract_book_details(html: str, product_url: str, source_page: str) -> dict:
         "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
 
-def fetch_book_details(entries: list[tuple[str, str]]) -> list[dict]:
+def fetch_book_details(entries: list[tuple[str, str]], stats: RunStats) -> list[dict]:
     """
     Fetches book details for each book entry.
     """
     records = []
     for url, source_page in entries:
         filename = book_filename_from_url(url)
-        html, was_fetched = get_page_html(url, filename)
-        if html is None:
+        try:
+            html, was_fetched = get_page_html(url, filename, stats)
+        except Exception as e:
+            print(f"Unexpected error on detail page {url}: {e}")
+            stats.failed_pages += 1
+            stats.failed_page_details.append({"url": url, "reason": str(e)})
             continue
 
-        records.append(extract_book_details(html, url, source_page))
+        if html is None:
+            continue
+        try:
+            records.append(extract_book_details(html, url, source_page))
+        except Exception as e:
+            # Page fetched fine but had unexpected structure — log and skip.
+            print(f"Failed to parse detail page {url}: {e}")
+            stats.failed_pages += 1
+            stats.failed_page_details.append({"url": url, "reason": f"parse_error: {e}"})
+            continue
         if was_fetched:
             time.sleep(0.5)
 
@@ -222,14 +283,37 @@ def write_json(path: str, data) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 if __name__ == "__main__":
-    book_entries = crawl_catalogue(URL, 3)
+    run_started_at = datetime.now(timezone.utc)
+    start_time = time.monotonic()
+    stats = RunStats()
+    book_entries = crawl_catalogue(URL, 3, stats)
     unique_entries = remove_duplicates(book_entries)
-    records = fetch_book_details(unique_entries)
+
+    unique_entries.append((
+        "https://books.toscrape.com/catalogue/this-book-does-not-exist_9999/index.html",
+        URL,
+    ))
+    records = fetch_book_details(unique_entries, stats)
     print(f"detail_pages={len(records)}")
     valid_records, errors = build_records(records)
     write_json(BOOKS_OUTPUT_PATH, [r.model_dump(mode="json") for r in valid_records])
     write_json(ERRORS_OUTPUT_PATH, errors)
 
-    if valid_records:
-        print(json.dumps(valid_records[0].model_dump(mode="json"), indent=2))
-    print(f"valid_records={len(valid_records)} , errors={len(errors)}")
+    duration_seconds = round(time.monotonic() - start_time, 3)
+    run_report = {
+        "start_time": run_started_at.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "duration_seconds": duration_seconds,
+        "pages_fetched": stats.pages_fetched,
+        "cache_hits": stats.cache_hits,
+        "valid_records": len(valid_records),
+        "invalid_records": len(errors),
+        "failed_pages": stats.failed_pages,
+        "failed_page_details": stats.failed_page_details,
+    }
+    write_json(RUN_REPORT_PATH, run_report)
+    print("\nRun report:")
+    print(json.dumps(run_report, indent=2))
+    print(
+        f"valid_records={len(valid_records)} , errors={len(errors)} , "
+        f"failed_pages={stats.failed_pages}"
+    )
