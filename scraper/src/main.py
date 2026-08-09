@@ -2,17 +2,40 @@ import os
 import time
 import requests
 import json
+import re
 from datetime import datetime, timezone
 from urllib.parse import urljoin, urlparse
 from bs4 import BeautifulSoup
+from pydantic import BaseModel, Field, HttpUrl, ValidationError, field_validator
 
 URL = "https://books.toscrape.com/"
-CACHE_DIR = "cache"
-PAGE1_FILENAME = "catalogue-page-1.html"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CACHE_DIR = os.path.join(SCRIPT_DIR, "cache")
+OUTPUT_DIR = os.path.join(SCRIPT_DIR, "output")
+BOOKS_OUTPUT_PATH = os.path.join(OUTPUT_DIR, "books.json")
+ERRORS_OUTPUT_PATH = os.path.join(OUTPUT_DIR, "errors.json")
 
 header = {
     "User-Agent": "FlyRankInternshipA9/1.0 https://github.com/Mhd-Khaled-Helwany/FlyRankAI-Internship/tree/main/scraper"   
 }
+
+class BookRecord(BaseModel):
+    title: str = Field(..., description="Book title as shown on the page")
+    product_url: HttpUrl = Field(..., description="Canonical absolute URL of the book's detail page")
+    price_text: str = Field(..., description="Raw price string as displayed on the site, e.g. '£51.77'")
+    price_gbp: float = Field(..., ge=0, description="Price parsed into a plain number, in GBP")
+    availability_text: str = Field(..., description="Raw availability string, e.g. 'In stock (22 available)'")
+    rating_text: str = Field(..., description="Star rating as a word, e.g. 'Three'")
+    description: str | None = Field(default=None, description="Book description, or null if the page has none")
+    source_page: HttpUrl = Field(..., description="Catalogue page URL this book was discovered on")
+    fetched_at: str = Field(..., description="UTC ISO 8601 timestamp of when the detail page was fetched")
+
+    @field_validator("product_url", "source_page")
+    @classmethod
+    def must_be_https(cls, value):
+        if str(value).startswith("http://"):
+            raise ValueError("URL must use https://, not http://")
+        return value
 
 def fetch_page(url:str) -> requests.Response:
     """
@@ -166,10 +189,47 @@ def fetch_book_details(entries: list[tuple[str, str]]) -> list[dict]:
 
     return records
 
+def parse_price_gbp(price_text: str) -> float:
+    """
+    Parses the price text and returns the price in GBP as a float.
+    """
+    match = re.search(r"\d+\.?\d*", price_text)
+    if not match:
+        raise ValueError(f"Could not parse a numeric price from: {price_text!r}")
+    return float(match.group())
+
+def build_records(raw_records: list[dict]) -> tuple[list[BookRecord], list[dict]]:
+    valid_by_url: dict[str, BookRecord] = {}
+    errors: list[dict] = []
+    for raw in raw_records:
+        try:
+            candidate = dict(raw)
+            candidate["price_gbp"] = parse_price_gbp(raw["price_text"])
+            record = BookRecord(**candidate)
+        except (ValidationError, ValueError, KeyError) as e:
+            errors.append({"raw_record": raw, "reason": str(e)})
+            continue
+
+        canonical_url = str(record.product_url)
+        if canonical_url not in valid_by_url:
+            valid_by_url[canonical_url] = record
+    ordered_records = sorted(valid_by_url.values(), key=lambda r: str(r.product_url))
+    return ordered_records, errors
+
+def write_json(path: str, data) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
 if __name__ == "__main__":
     book_entries = crawl_catalogue(URL, 3)
     unique_entries = remove_duplicates(book_entries)
     records = fetch_book_details(unique_entries)
-    if records:
-        print(json.dumps(records[0], indent=2))
     print(f"detail_pages={len(records)}")
+    valid_records, errors = build_records(records)
+    write_json(BOOKS_OUTPUT_PATH, [r.model_dump(mode="json") for r in valid_records])
+    write_json(ERRORS_OUTPUT_PATH, errors)
+
+    if valid_records:
+        print(json.dumps(valid_records[0].model_dump(mode="json"), indent=2))
+    print(f"valid_records={len(valid_records)} , errors={len(errors)}")
