@@ -41,7 +41,6 @@ def quarantine_output(
         with QUARANTINE_LOG.open("a", encoding="utf-8") as log_file:
             log_file.write(json.dumps(entry, ensure_ascii=False) + "\n")
     except OSError:
-        # Quarantine logging must not turn a controlled 422 into a server crash.
         pass
 
 @app.exception_handler(RequestValidationError)
@@ -62,6 +61,13 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.post("/enrich")
 async def enrich_book(request: EnrichRequest):
     """"Endpoint that provides the LLM with a book record from books.json"""
+    if os.environ.get("LLM_ENABLED", "true").lower() == "false":
+        return EnrichmentOutput(
+            category=Category.OTHER,
+            summary=None,
+            quality_flags=[],
+        )
+
     if os.environ.get("LLM_STUB") == "1":
         return EnrichmentOutput(
             category=Category.OTHER,
@@ -69,7 +75,18 @@ async def enrich_book(request: EnrichRequest):
             quality_flags=[],
         )
     try:
-        raw_output = call_model(client, MODEL, request.record)
+        raw_output, meta = call_model(
+            client,
+            MODEL,
+            request.record,
+            timeout=30.0,
+            prompt_version=PROMPT_VERSION,
+        )
+    except TimeoutError as exc:
+        return JSONResponse(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            content={"error": "model_timeout", "message": "The LLM request timed out."},
+        )
     except Exception as exc:
         return JSONResponse(
             status_code=status.HTTP_502_BAD_GATEWAY,
@@ -82,12 +99,20 @@ async def enrich_book(request: EnrichRequest):
         first_error_text = str(first_error)
 
     try:
-        retry_output = call_model(
+        retry_output, retry_meta = call_model(
             client,
             MODEL,
             request.record,
             broken_output=raw_output,
             validation_error=first_error_text,
+            timeout=30.0,
+            prompt_version=PROMPT_VERSION,
+        )
+    except TimeoutError as exc:
+        quarantine_output(request, raw_output, str(exc))
+        return JSONResponse(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            content={"error": "model_timeout", "message": "The LLM request timed out during repair attempt."},
         )
     except Exception as exc:
         quarantine_output(request, raw_output, str(exc))
