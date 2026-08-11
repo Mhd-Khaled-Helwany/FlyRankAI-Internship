@@ -1,0 +1,13 @@
+{
+  "record": {
+    "title": "The Black Maria",
+    "product_url": "https://books.toscrape.com/catalogue/the-black-maria_991/index.html",
+    "price_text": "£52.15",
+    "price_gbp": 52.15,
+    "availability_text": "In stock (19 available)",
+    "rating_text": "One",
+    "description": "Praise for Aracelis Girmay: \"In Aracelis Girmay we have a poet who collects, polishes, and shares stories with such brilliant invention, tenderness, and intellectual liveliness...\" Taking its name from the moon's dark plains, misidentified as seas by early astronomers, the black maria investigates African diasporic histories, the consequences of racism within American culture, and the question of human identity. Central to this project is a desire to recognize the lives of Eritrean refugees who have been made invisible by years of immigration crisis, refugee status, exile, and resulting statelessness. Aracelis Girmay is the author of three poetry collections, the black maria; Kingdom Animalia, which won the Isabella Gardner Award and was a finalist for the NBCC Award; and Teeth. ...more",
+    "source_page": "https://books.toscrape.com/",
+    "fetched_at": "2026-08-09T13:13:48Z"
+  }
+}

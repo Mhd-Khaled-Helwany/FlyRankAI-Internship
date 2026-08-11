@@ -1,0 +1,13 @@
+{
+  "record": {
+    "title": "Sapiens: A Brief History of Humankind",
+    "product_url": "https://books.toscrape.com/catalogue/sapiens-a-brief-history-of-humankind_996/index.html",
+    "price_text": "£54.23",
+    "price_gbp": 54.23,
+    "availability_text": "In stock (20 available)",
+    "rating_text": "Five",
+    "description": "From a renowned historian comes a groundbreaking narrative of humanity's creation and evolution, a #1 international bestseller, that explores the ways in which biology and history have defined us. One hundred thousand years ago, at least six different species of humans inhabited Earth. Yet today there is only one, homo sapiens. What happened to the others? And what may happen to us? Dr. Yuval Noah Harari breaks the mold with this highly original book that begins about 70,000 years ago with the appearance of modern cognition, integrating history and science to reconsider accepted narratives and examine specific events within the context of larger ideas. ...more",
+    "source_page": "https://books.toscrape.com/",
+    "fetched_at": "2026-08-09T13:13:48Z"
+  }
+}
