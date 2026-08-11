@@ -1,0 +1,156 @@
+[
+  {
+    "record": {
+      "title": "The Past Never Ends",
+      "product_url": "https://books.toscrape.com/catalogue/the-past-never-ends_942/index.html",
+      "price_text": "Â£56.50",
+      "price_gbp": 56.5,
+      "availability_text": "In stock (16 available)",
+      "rating_text": "Four",
+      "description": "A simple task, Attorney Chester Morgan thinks. Get a copy of a public record for a young man whose only friend has died in an unexplained accidental death. Except... The police file regarding the demise of sex worker Tanya Everly has been sealed by the order of the chief of police, and no one will talk. Warned to drop the matter, Attorney Morgan knows that if he doesn't sp A simple task, Attorney Chester Morgan thinks. Get a copy of a public record for a young man whose only friend has died in an unexplained accidental death. Except... The police file regarding the demise of sex worker Tanya Everly has been sealed by the order of the chief of police, and no one will talk. Warned to drop the matter, Attorney Morgan knows that if he doesn't speak for the dead young woman, no one will. Haunted by his discovery of the body of a prominent local oilman, Morgan pursues a quest for justice that puts his reputation, career, and life at risk. A journey that takes him into the dark shadows of the sex-for-sale business, into the marble courtrooms of Oklahoma, and into the aching loneliness of his own soul. Set in the American Southwest in the days before 9/11, The Past Never Ends is both a complex murder mystery and a meditation on the self-perpetuating nature of injustice and the ethereal nature of justice itself. ...more",
+      "source_page": "https://books.toscrape.com/catalogue/page-3.html",
+      "fetched_at": "2026-08-09T13:13:49Z"
+    },
+    "expected": {
+      "category": "Mystery",
+      "summary": "A simple task, Attorney Chester Morgan thinks",
+      "quality_flags": []
+    }
+  },
+  {
+    "record": {
+      "title": "Foolproof Preserving: A Guide to Small Batch Jams, Jellies, Pickles, Condiments, and More: A Foolproof Guide to Making Small Batch Jams, Jellies, Pickles, Condiments, and More",
+      "product_url": "https://books.toscrape.com/catalogue/foolproof-preserving-a-guide-to-small-batch-jams-jellies-pickles-condiments-and-more-a-foolproof-guide-to-making-small-batch-jams-jellies-pickles-condiments-and-more_978/index.html",
+      "price_text": "Â£30.52",
+      "price_gbp": 30.52,
+      "availability_text": "In stock (19 available)",
+      "rating_text": "Three",
+      "description": "Canning perfected the Americaâs Test Kitchen way. The art of preserving produce by canning and preserving has come full circle from grandmother's kitchen to a whole new generation now eager to learn it. This detailed guide to home preserving is perfect for novice canners and experts alike and offers more than 100 foolproof recipes across a wide range of categories, from sw Canning perfected the Americaâs Test Kitchen way. The art of preserving produce by canning and preserving has come full circle from grandmother's kitchen to a whole new generation now eager to learn it. This detailed guide to home preserving is perfect for novice canners and experts alike and offers more than 100 foolproof recipes across a wide range of categories, from sweet jams and jellies to savory jams, vegetables, condiments, pickles, whole fruits, and more. Let the experts at America's Test Kitchen show you how to do it right with detailed tutorials, troubleshooting tips, equipment information, and insight into the science behind canning. ...more",
+      "source_page": "https://books.toscrape.com/catalogue/page-2.html",
+      "fetched_at": "2026-08-09T13:13:48Z"
+    },
+    "expected": {
+      "category": "other",
+      "summary": "Canning perfected the Americaâs Test Kitchen way",
+      "quality_flags": [
+        "encoding_error"
+      ]
+    }
+  },
+  {
+    "record": {
+      "title": "Aladdin and His Wonderful Lamp",
+      "product_url": "https://books.toscrape.com/catalogue/aladdin-and-his-wonderful-lamp_973/index.html",
+      "price_text": "Â£53.13",
+      "price_gbp": 53.13,
+      "availability_text": "In stock (19 available)",
+      "rating_text": "Three",
+      "description": "Planning on seeing Aladdin the Disney musical? Read the classic story of \"Aladdin and his Wonderful Lamp\" in this sparkling new edition by Harpendore. Synopsis: Aladdin is a poor boy who lives with his mother in the ancient kingdom of Cathay. One day a strange man appears offering untold riches! Aladdin is not so sure, yet he's sorely tempted. Join Aladdin on his incredib Planning on seeing Aladdin the Disney musical? Read the classic story of \"Aladdin and his Wonderful Lamp\" in this sparkling new edition by Harpendore. Synopsis: Aladdin is a poor boy who lives with his mother in the ancient kingdom of Cathay. One day a strange man appears offering untold riches! Aladdin is not so sure, yet he's sorely tempted. Join Aladdin on his incredible adventures and visit the cave of treasures. A world of magic awaits you, but watch your step - there's mischief lurking at every turn! The Arabian Nights (also known as The One Thousand and One Nights) is an ancient collection of tales that have existed for thousands of years. Harpendore's Arabian Nights Adventures are beautifully retold versions of these ancient classics that are specially designed to appeal to children aged seven years and above. They are written in a warm and accessible style and include wonderful illustrations inside. With mischief and magic in equal measure, this series is sure to captivate readers everywhere. The Arabian Nights Adventures series is being released throughout 2016 and 2017. Stories to be included are: The Adventures of Prince Camar & Princess Badoura Aladdin and his Wonderful Lamp Gulnare of the Sea Ali Baba and the Forty Thieves The Seven Voyages of Sinbad the Sailor The Enchanted Horse The Talking Bird, the Singing Tree and the Golden Water The Merchant and the Genie The Tale of Zubaidah and the Three Qalandars The Adventures of Harun al-Rashid, Caliph of Baghdad The Three Princes, the Princess and the Jinni Pari Banou The Fisherman and the Genie The King's Jester (also known as The Little Hunchback) ...more",
+      "source_page": "https://books.toscrape.com/catalogue/page-2.html",
+      "fetched_at": "2026-08-09T13:13:48Z"
+    },
+    "expected": {
+      "category": "Children's literature",
+      "summary": "Planning on seeing Aladdin the Disney musical? Read the classic story of \"Aladdin and his Wonderful Lamp\" in this sparkling new edition by Harpendore",
+      "quality_flags": []
+    }
+  },
+  {
+    "record": {
+      "title": "Throwing Rocks at the Google Bus: How Growth Became the Enemy of Prosperity",
+      "product_url": "https://books.toscrape.com/catalogue/throwing-rocks-at-the-google-bus-how-growth-became-the-enemy-of-prosperity_948/index.html",
+      "price_text": "Â£31.12",
+      "price_gbp": 31.12,
+      "availability_text": "In stock (16 available)",
+      "rating_text": "Three",
+      "description": "Capital in the Twenty-First Century meets The Second Machine Age in this stunning and optimistic tour de force on the promise and peril of the digital economy, from one of the most brilliant social critics of our time. Digital technology was supposed to usher in a new age of endless prosperity, but so far it has been used to put industrial capitalism on steroids, makin Capital in the Twenty-First Century meets The Second Machine Age in this stunning and optimistic tour de force on the promise and peril of the digital economy, from one of the most brilliant social critics of our time. Digital technology was supposed to usher in a new age of endless prosperity, but so far it has been used to put industrial capitalism on steroids, making it harder for people and businesses to keep up. Social networks surrender their original missions to more immediately profitable data mining, while brokerage houses abandon value investing for algorithms that drain markets and our 401ks alike--all tactics driven by the need to stoke growth by any means necessary. Instead of taking this opportunity to reprogram our economy for sustainability, we have doubled down on growth as its core command. We have reached the limits of this approach. We must escape the growth trap, once and for all.Â Media scholar and technology author Douglas Rushkoff--one of today's most original and influential thinkers--argues for a new economic program that utilizes the unique distributive power of the internet while breaking free of the winner-take-all system the growth trap leaves in its wake. Drawing on sources both contemporary and historical, Rushkoff pioneers a new understanding of the old economic paradigm, from central currency to debt to corporations and labor.Most importantly, he offers a series of practical steps for businesses, consumers, investors, and policymakers to remake the economic operating system from the inside out--and prosper along the way. Instead of boycotting Wal-Mart or overtaxing the wealthy, we simply implement strategies that foster the creation of value by stakeholders other than just ourselves. From our currency to our labor to the corporation, every aspect of the economy can be reprogrammed with minimal disruption to create a more equitably distributed prosperity for all.Inspiring and challenging, Throwing Rocks at the Google Bus provides a pragmatic, optimistic, and human-centered model for economic progress in the digital age. ...more",
+      "source_page": "https://books.toscrape.com/catalogue/page-3.html",
+      "fetched_at": "2026-08-09T13:13:49Z"
+    },
+    "expected": {
+      "category": "other",
+      "summary": "Capital in the Twenty-First Century meets The Second Machine Age in this stunning and optimistic tour de force on the promise and peril of the digital economy, from one of the most brilliant social critics of our time",
+      "quality_flags": [
+        "encoding_error"
+      ]
+    }
+  },
+  {
+    "record": {
+      "title": "Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991",
+      "product_url": "https://books.toscrape.com/catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html",
+      "price_text": "Â£57.25",
+      "price_gbp": 57.25,
+      "availability_text": "In stock (19 available)",
+      "rating_text": "Three",
+      "description": "This is the never-before-told story of the musical revolution that happened right under the nose of the Reagan Eighties--when a small but sprawling network of bands, labels, fanzines, radio stations, and other subversives reenergized American rock with punk rock's do-it-yourself credo and created music that was deeply personal, often brilliant, always challenging, and imme This is the never-before-told story of the musical revolution that happened right under the nose of the Reagan Eighties--when a small but sprawling network of bands, labels, fanzines, radio stations, and other subversives reenergized American rock with punk rock's do-it-yourself credo and created music that was deeply personal, often brilliant, always challenging, and immensely influential. This sweeping chronicle of music, politics, drugs, fear, loathing, and faith has been recognized as an indie rock classic in its own right. Among the bands profiled: Mission of Burma, Butthole Surfers, The Minutemen, Sonic Youth, Black Flag, Big Black, HÃ¼sker DÃ¼, Fugazi, Minor Threat, Mudhoney, The Replacements, Beat Happening, and Dinosaur Jr. ...more",
+      "source_page": "https://books.toscrape.com/",
+      "fetched_at": "2026-08-09T13:13:48Z"
+    },
+    "expected": {
+      "category": "Music",
+      "summary": "This is the never-before-told story of the musical revolution that happened right under the nose of the Reagan Eighties--when a small but sprawling network of bands, labels, fanzines, radio stations, and other subversives reenergized American rock with punk rock's do-it-yourself credo and created music that was deeply personal, often brilliant, always challenging, and imme This is the never-before-told story of the musical revolution that happened right under the nose of the Reagan Eighties--whe",
+      "quality_flags": [
+        "encoding_error"
+      ]
+    }
+  },
+  {
+    "record": {
+      "title": "Mesaerion: The Best Science Fiction Stories 1800-1849",
+      "product_url": "https://books.toscrape.com/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html",
+      "price_text": "Â£37.59",
+      "price_gbp": 37.59,
+      "availability_text": "In stock (19 available)",
+      "rating_text": "One",
+      "description": "Andrew Barger, award-winning author and engineer, has extensively researched forgotten journals and magazines of the early 19th century to locate groundbreaking science fiction short stories in the English language. In doing so, he found what is possibly the first science fiction story by a female (and it is not from Mary Shelley). Andrew located the first steampunk short Andrew Barger, award-winning author and engineer, has extensively researched forgotten journals and magazines of the early 19th century to locate groundbreaking science fiction short stories in the English language. In doing so, he found what is possibly the first science fiction story by a female (and it is not from Mary Shelley). Andrew located the first steampunk short story, which has not been republished since 1844. There is the first voyage to the moon in a balloon, republished for the first time since 1820 that further tells of a darkness machine and a lunarian named Zuloc. Other sci-stories include the first robotic insect and an electricity gun. Once again, Andrew has searched old texts to find the very best science fiction stories from the period when the genre automated to life, some of the stories are published for the first time in nearly 200 years. Read these fantastic stories today!OUR OWN COUNTRY So mechanical has the age become, that men seriously talk of flying machines, to go by steam, --not your air-balloons, but real Daedalian wings, made of wood and joints, nailed to your shoulder, --not wings of feathers and wax like the wings of Icarus, who fell into the Cretan sea, but real, solid, substantial, rock-maple wings with wrought-iron hinges, and huge concavities, to propel us through the air. Knickerbocker Magazine, May 18 ...more",
+      "source_page": "https://books.toscrape.com/",
+      "fetched_at": "2026-08-09T13:13:48Z"
+    },
+    "expected": {
+      "category": "Science fiction",
+      "summary": "Andrew Barger, award-winning author and engineer, has extensively researched forgotten journals and magazines of the early 19th century to locate groundbreaking science fiction short stories in the English language",
+      "quality_flags": []
+    }
+  },
+  {
+    "record": {
+      "title": "Maude (1883-1993):She Grew Up with the country",
+      "product_url": "https://books.toscrape.com/catalogue/maude-1883-1993she-grew-up-with-the-country_964/index.html",
+      "price_text": "Â£18.02",
+      "price_gbp": 18.02,
+      "availability_text": "In stock (18 available)",
+      "rating_text": "Two",
+      "description": "This new edition of Maude (1883-1993) has been updated by Mardo Williamsâ daughters, adding historical details their dad wished to make, twice as many photos, and nine appendices not present in the 1996 hardcover (which won an Ohioana Library Award for its author). During her 110-year lifetime, Maude went from a 400-lb. wood-burning stove to a microwave oven, from an outdo This new edition of Maude (1883-1993) has been updated by Mardo Williamsâ daughters, adding historical details their dad wished to make, twice as many photos, and nine appendices not present in the 1996 hardcover (which won an Ohioana Library Award for its author). During her 110-year lifetime, Maude went from a 400-lb. wood-burning stove to a microwave oven, from an outdoor privy to indoor plumbing. She got the vote in 1920 and voted in the next 18 Presidential elections.With poetry and human dramas (two murders and a suicide), written by a master journalist, the book shows the impact of the changing times on shy, unassuming Maude, her fun-loving husband Lee, and their four active children. They farmed 100 acres on the banks of Rush Creek in Logan County (Ohio).A favorite with book discussion groups, Maude has been adopted by several colleges for use as a supplemental American history text. ...more",
+      "source_page": "https://books.toscrape.com/catalogue/page-2.html",
+      "fetched_at": "2026-08-09T13:13:49Z"
+    },
+    "expected": {
+      "category": "Poetry",
+      "summary": "This new edition of Maude (1883-1993) has been updated by Mardo Williamsâ daughters, adding historical details their dad wished to make, twice as many photos, and nine appendices not present in the 1996 hardcover (which won an Ohioana Library Award for its author)",
+      "quality_flags": [
+        "encoding_error"
+      ]
+    }
+  },
+  {
+    "record": {
+      "title": "#HigherSelfie: Wake Up Your Life. Free Your Soul. Find Your Tribe.",
+      "product_url": "https://books.toscrape.com/catalogue/higherselfie-wake-up-your-life-free-your-soul-find-your-tribe_957/index.html",
+      "price_text": "Â£23.11",
+      "price_gbp": 23.11,
+      "availability_text": "In stock (17 available)",
+      "rating_text": "Five",
+      "description": "There is a cosmic alarm clock going off around the world! #HigherSelfie's aim is to unite all those waking up spiritually in this digital age. This book is a guide to love, connection, and kickass surrendered action for young people who have at least a toe in the door of spirituality. With a no-nonsense approach and full of wit and humor, this book shares age-old concepts There is a cosmic alarm clock going off around the world! #HigherSelfie's aim is to unite all those waking up spiritually in this digital age. This book is a guide to love, connection, and kickass surrendered action for young people who have at least a toe in the door of spirituality. With a no-nonsense approach and full of wit and humor, this book shares age-old concepts in a language that is accessible to the modern spiritual audience. Whether you have just bought a yoga mat or have been meditating for years, this book will offer you guidance and support, whatever stage of the journey you're at. Life coaches Jo Westwood and Lucy Sheridan touch upon timeless topics such as forgiveness, surrender and the ego, as well as subjects specific to the current age, such as using social media in a healthy way, finding a like-minded tribe, and following your own spiritual and life paths without comparing yourself to others. Whether you're a Reiki master, climbing the corporate ladder or working in a suburban garden center #HigherSelfie will be the perfect âgateway drugâ for those looking for something deeper and more meaningful. ...more",
+      "source_page": "https://books.toscrape.com/catalogue/page-3.html",
+      "fetched_at": "2026-08-09T13:13:49Z"
+    },
+    "expected": {
+      "category": "other",
+      "summary": "There is a cosmic alarm clock going off around the world! #HigherSelfie's aim is to unite all those waking up spiritually in this digital age",
+      "quality_flags": [
+        "encoding_error"
+      ]
+    }
+  }
+]
