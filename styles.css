@@ -494,9 +494,16 @@ h2,
   color: var(--warm-white);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.cta-band > div:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 44px;
 }
 
 .cta-band .btn-secondary {
