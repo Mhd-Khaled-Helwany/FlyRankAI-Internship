@@ -83,7 +83,22 @@ async def get_report(report_id: str):
         raise HTTPException(status_code=404, detail="Report not found")
     return reports[report_id]
 
-inngest.fast_api.serve(app, inngest_client, [say_hello, make_report])
+@inngest_client.create_function(
+    fn_id="heartbeat",
+    trigger=inngest.TriggerCron(cron="* * * * *"),
+)
+async def heartbeat(ctx: inngest.Context) -> str:
+    counts = {"pending": 0, "done": 0, "failed": 0}
+    for report in reports.values():
+        if report["status"] in counts:
+            counts[report["status"]] += 1
+    ctx.logger.info(
+        f"heartbeat: {counts['pending']} pending, "
+        f"{counts['done']} done, {counts['failed']} failed"
+    )
+    return "heartbeat logged"
+
+inngest.fast_api.serve(app, inngest_client, [say_hello, make_report, heartbeat])
 # terminal 1: INNGEST_DEV=1 ../.venv/bin/python -m uvicorn main:app --port 8000
 # terminal 2: npx inngest-cli@latest dev -u http://localhost:8000/api/inngest
 # browser: http://localhost:8288
