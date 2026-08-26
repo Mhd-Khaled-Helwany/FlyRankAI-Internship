@@ -6,7 +6,7 @@ import inngest
 import inngest.fast_api
 
 class ReportRequest(BaseModel):
-    topic: str
+    topic: str = ""
 
 app = FastAPI()
 
@@ -36,6 +36,7 @@ async def say_hello(ctx: inngest.Context) -> str:
 @inngest_client.create_function(
     fn_id="make-report",
     trigger=inngest.TriggerEvent(event="report/requested"),
+    retries=2,
 )
 async def make_report(ctx: inngest.Context) -> str:
     report_id = ctx.event.data["id"]
@@ -43,6 +44,8 @@ async def make_report(ctx: inngest.Context) -> str:
     await ctx.step.sleep("do-the-slow-work", datetime.timedelta(seconds=8))
 
     def build(topic: str) -> str:
+        if topic == "fail":
+            raise ValueError("The report oven is broken!")
         return f"Generated report about '{topic}'"
 
     result = await ctx.step.run("build-report", build, topic)
@@ -54,6 +57,9 @@ async def make_report(ctx: inngest.Context) -> str:
 @app.post("/reports", status_code=status.HTTP_202_ACCEPTED)
 async def create_report(request: ReportRequest):
     """Accept a report request and hand the slow work to Inngest."""
+    if not request.topic:
+        raise HTTPException(status_code=400, detail="topic is required")
+
     global next_id
     report_id = str(next_id)
     next_id += 1
