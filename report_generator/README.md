@@ -27,7 +27,7 @@ Use the project Python environment (`.venv`).
 2. **Start the API**:
 
    ```bash
-   uvicorn src.main:app --port 8000
+   fastapi dev src/main.py
    ```
 
 The server exposes:
