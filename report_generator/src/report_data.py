@@ -1,11 +1,8 @@
 import json
-import sqlite3
-from pathlib import Path
-
-DB_PATH = Path(__file__).resolve().parent.parent / "report.db"
+from db import get_connection
 
 def getReportData():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     cur = conn.cursor()
     total = cur.execute("SELECT COUNT(*) FROM books").fetchone()[0]
     avg_price = cur.execute("SELECT AVG(price) FROM books").fetchone()[0]

@@ -2,8 +2,9 @@ import json
 import sqlite3
 from pathlib import Path
 
+from db import DB_PATH, init_db
+
 ROOT = Path(__file__).resolve().parent.parent
-DB_PATH = ROOT / "report.db"
 BOOKS_PATH = ROOT / "books.json"
 
 RATING = {
@@ -17,17 +18,7 @@ RATING = {
 def main():
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            price REAL NOT NULL,
-            rating INTEGER NOT NULL,
-            url TEXT NOT NULL
-        )
-        """
-    )
+    init_db(conn)
     cur.execute("DELETE FROM books")
     with open(BOOKS_PATH, "r", encoding="utf-8") as f:
         records = json.load(f)

@@ -63,10 +63,9 @@ def build_html(report):
 """
 
 def _all_books(report):
-    import sqlite3
-    from pathlib import Path
+    from db import get_connection
 
-    conn = sqlite3.connect(Path(__file__).resolve().parent.parent / "report.db")
+    conn = get_connection()
     cur = conn.cursor()
     rows = cur.execute(
         "SELECT title, rating FROM books ORDER BY id"

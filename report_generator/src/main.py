@@ -1,4 +1,3 @@
-import sqlite3
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -8,14 +7,12 @@ from pydantic import BaseModel
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from db import get_connection
 from report_data import getReportData
 from render_pdf import render_pdf_to_path, OUT_DIR
 from render_report import build_html
 
 app = FastAPI()
-
-ROOT = Path(__file__).resolve().parent.parent
-DB_PATH = ROOT / "report.db"
 
 @app.get("/health")
 async def get_health():
@@ -30,7 +27,7 @@ async def create_report(req: ReportRequest | None = None):
     """Run the whole pipeline: query, render to PDF, store the row."""
     OUT_DIR.mkdir(exist_ok=True)
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     cur = conn.cursor()
 
     if not (req and req.force):
@@ -89,7 +86,7 @@ def _today_start_iso():
 @app.get("/reports/{report_id}")
 async def get_report(report_id: int):
     """Return the report row including the file link."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     cur = conn.cursor()
     row = cur.execute(
         "SELECT id, path, created_at FROM reports WHERE id = ?",
@@ -110,7 +107,7 @@ async def get_report(report_id: int):
 @app.get("/reports/{report_id}/file")
 async def get_report_file(report_id: int):
     """Serve the PDF file from disk."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_connection()
     cur = conn.cursor()
     row = cur.execute(
         "SELECT path FROM reports WHERE id = ?",
