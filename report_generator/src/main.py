@@ -3,7 +3,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -21,16 +22,37 @@ async def get_health():
     """Get the health of the API."""
     return {"status": "ok"}
 
-@app.post("/reports", status_code=201)
-async def create_report():
+class ReportRequest(BaseModel):
+    force: bool = False
+
+@app.post("/reports")
+async def create_report(req: ReportRequest | None = None):
     """Run the whole pipeline: query, render to PDF, store the row."""
     OUT_DIR.mkdir(exist_ok=True)
+
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+
+    if not (req and req.force):
+        today_start = _today_start_iso()
+        existing = cur.execute(
+            "SELECT id, path, created_at FROM reports "
+            "WHERE created_at >= ? ORDER BY id DESC LIMIT 1",
+            (today_start,),
+        ).fetchone()
+        if existing is not None and existing[1]:
+            conn.close()
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "id": existing[0],
+                    "file": f"/reports/{existing[0]}/file",
+                },
+            )
 
     report = getReportData()
     html = build_html(report)
 
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
     created_at = datetime.now(timezone.utc).isoformat()
     cur.execute(
         "INSERT INTO reports (path, created_at) VALUES (?, ?)",
@@ -50,10 +72,19 @@ async def create_report():
     conn.commit()
     conn.close()
 
-    return {
-        "id": report_id,
-        "file": f"/reports/{report_id}/file",
-    }
+    return JSONResponse(
+        status_code=201,
+        content={
+            "id": report_id,
+            "file": f"/reports/{report_id}/file",
+        },
+    )
+
+def _today_start_iso():
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    ).isoformat()
 
 @app.get("/reports/{report_id}")
 async def get_report(report_id: int):
