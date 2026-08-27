@@ -2,7 +2,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / "report.db"
+DB_PATH = Path(__file__).resolve().parent.parent / "report.db"
 
 def getReportData():
     conn = sqlite3.connect(DB_PATH)

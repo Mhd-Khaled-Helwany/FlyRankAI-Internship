@@ -2,8 +2,9 @@ import json
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent / "report.db"
-BOOKS_PATH = Path(__file__).parent / "books.json"
+ROOT = Path(__file__).resolve().parent.parent
+DB_PATH = ROOT / "report.db"
+BOOKS_PATH = ROOT / "books.json"
 
 RATING = {
     "One": 1,
